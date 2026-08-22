@@ -2,6 +2,7 @@ const timeDisplay = document.getElementById("timeDisplay");
 const currentIntervalLabel = document.getElementById("currentIntervalLabel");
 const toggleBtn = document.getElementById("toggleBtn");
 const resetBtn = document.getElementById("resetBtn");
+const tabTitleToggleBtn = document.getElementById("tabTitleToggleBtn");
 const previewBtn = document.getElementById("previewBtn");
 const intervalList = document.getElementById("intervalList");
 const addIntervalBtn = document.getElementById("addIntervalBtn");
@@ -15,6 +16,8 @@ const DEFAULT_NEW_MINUTES = 5;
 const STORAGE_KEY = "interval-timer:settings";
 const STORAGE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 1週間
 
+const originalTitle = document.title;
+
 let intervals = [5];
 let currentIndex = 0;
 let remainingSeconds = 0;
@@ -22,6 +25,7 @@ let isRunning = false;
 let intervalId = null;
 let audioContext = null;
 let gainNode = null;
+let isTabTitleEnabled = false;
 
 function clampMinutes(value) {
   const parsed = Math.round(Number(value));
@@ -87,6 +91,13 @@ function formatTime(totalSeconds) {
 function updateDisplay() {
   timeDisplay.textContent = formatTime(remainingSeconds);
   currentIntervalLabel.textContent = `${currentIndex + 1} / ${intervals.length} · ${intervals[currentIndex]}分`;
+  updateTabTitle();
+}
+
+function updateTabTitle() {
+  if (!isTabTitleEnabled) return;
+  const status = isRunning ? "▶" : "⏸";
+  document.title = `${status} ${formatTime(remainingSeconds)} - ${originalTitle}`;
 }
 
 function renderIntervalList() {
@@ -194,6 +205,7 @@ function start() {
   isRunning = true;
   toggleBtn.textContent = "一時停止";
   intervalId = setInterval(tick, 1000);
+  updateTabTitle();
 }
 
 function pause() {
@@ -202,6 +214,7 @@ function pause() {
   toggleBtn.textContent = "再生";
   clearInterval(intervalId);
   intervalId = null;
+  updateTabTitle();
 }
 
 function reset() {
@@ -220,6 +233,17 @@ toggleBtn.addEventListener("click", () => {
 });
 
 resetBtn.addEventListener("click", reset);
+
+tabTitleToggleBtn.addEventListener("click", () => {
+  isTabTitleEnabled = !isTabTitleEnabled;
+  tabTitleToggleBtn.textContent = isTabTitleEnabled ? "タブのタイマーを非表示" : "タイマーをタブに表示";
+
+  if (isTabTitleEnabled) {
+    updateTabTitle();
+  } else {
+    document.title = originalTitle;
+  }
+});
 
 previewBtn.addEventListener("click", () => {
   getAudioContext();
