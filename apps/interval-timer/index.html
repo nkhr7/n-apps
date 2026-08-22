@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>インターバルタイマー | n-apps</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="back-link" href="../../index.html">&larr; トップページに戻る</a>
+
+  <main class="timer-app">
+    <h1>インターバルタイマー</h1>
+    <p class="description">5分経過するごとに音が鳴ります</p>
+
+    <div class="time-display" id="timeDisplay">00:00</div>
+    <p class="next-chime" id="nextChime">次の音まで 05:00</p>
+
+    <div class="controls">
+      <button id="toggleBtn" class="btn btn-primary">再生</button>
+      <button id="resetBtn" class="btn">リセット</button>
+    </div>
+
+    <div class="volume-control">
+      <label for="volumeRange">音量</label>
+      <input type="range" id="volumeRange" min="0" max="100" value="50">
+      <span id="volumeValue">50</span>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

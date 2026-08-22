@@ -1,9 +1,9 @@
 // 新しいアプリを追加する際は、このリストに1件追加するだけでトップページに表示されます
 const apps = [
   {
-    name: "Coming soon",
-    description: "最初のアプリを準備中です",
-    url: null,
+    name: "インターバルタイマー",
+    description: "5分おきに音が鳴るタイマー",
+    url: "apps/interval-timer/index.html",
   },
 ];
 
