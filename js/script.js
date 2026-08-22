@@ -2,7 +2,7 @@
 const apps = [
   {
     name: "インターバルタイマー",
-    description: "5分おきに音が鳴るタイマー",
+    description: "好きな間隔・音で鳴らせるインターバルタイマー",
     url: "apps/interval-timer/index.html",
   },
 ];

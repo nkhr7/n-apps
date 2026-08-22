@@ -11,7 +11,7 @@
 
   <main class="timer-app">
     <h1>インターバルタイマー</h1>
-    <p class="description">5分経過するごとに音が鳴ります</p>
+    <p class="description">設定した間隔で音が鳴ります</p>
 
     <div class="time-display" id="timeDisplay">00:00</div>
     <p class="next-chime" id="nextChime">次の音まで 05:00</p>
@@ -21,10 +21,36 @@
       <button id="resetBtn" class="btn">リセット</button>
     </div>
 
-    <div class="volume-control">
-      <label for="volumeRange">音量</label>
-      <input type="range" id="volumeRange" min="0" max="100" value="50">
-      <span id="volumeValue">50</span>
+    <div class="settings">
+      <div class="setting-row">
+        <label for="intervalSelect">間隔</label>
+        <select id="intervalSelect">
+          <option value="1">1分</option>
+          <option value="3">3分</option>
+          <option value="5" selected>5分</option>
+          <option value="10">10分</option>
+          <option value="15">15分</option>
+          <option value="20">20分</option>
+          <option value="30">30分</option>
+        </select>
+      </div>
+
+      <div class="setting-row">
+        <label for="soundSelect">音の種類</label>
+        <select id="soundSelect">
+          <option value="bell" selected>ベル</option>
+          <option value="chime">チャイム</option>
+          <option value="beep">ビープ</option>
+          <option value="alarm">アラーム</option>
+        </select>
+        <button id="previewBtn" class="btn btn-small" type="button">試聴</button>
+      </div>
+
+      <div class="setting-row">
+        <label for="volumeRange">音量</label>
+        <input type="range" id="volumeRange" min="0" max="100" value="50">
+        <span id="volumeValue">50</span>
+      </div>
     </div>
   </main>
 

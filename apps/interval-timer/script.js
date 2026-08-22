@@ -1,9 +1,10 @@
-const CHIME_INTERVAL_SECONDS = 5 * 60;
-
 const timeDisplay = document.getElementById("timeDisplay");
 const nextChimeDisplay = document.getElementById("nextChime");
 const toggleBtn = document.getElementById("toggleBtn");
 const resetBtn = document.getElementById("resetBtn");
+const previewBtn = document.getElementById("previewBtn");
+const intervalSelect = document.getElementById("intervalSelect");
+const soundSelect = document.getElementById("soundSelect");
 const volumeRange = document.getElementById("volumeRange");
 const volumeValue = document.getElementById("volumeValue");
 
@@ -13,6 +14,10 @@ let intervalId = null;
 let audioContext = null;
 let gainNode = null;
 
+function getIntervalSeconds() {
+  return Number(intervalSelect.value) * 60;
+}
+
 function formatTime(totalSeconds) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
@@ -21,7 +26,8 @@ function formatTime(totalSeconds) {
 
 function updateDisplay() {
   timeDisplay.textContent = formatTime(elapsedSeconds);
-  const remaining = CHIME_INTERVAL_SECONDS - (elapsedSeconds % CHIME_INTERVAL_SECONDS);
+  const intervalSeconds = getIntervalSeconds();
+  const remaining = intervalSeconds - (elapsedSeconds % intervalSeconds);
   nextChimeDisplay.textContent = `次の音まで ${formatTime(remaining)}`;
 }
 
@@ -35,27 +41,48 @@ function getAudioContext() {
   return audioContext;
 }
 
+function playTone(ctx, startTime, frequency, duration, type = "sine") {
+  const oscillator = ctx.createOscillator();
+  oscillator.type = type;
+  oscillator.frequency.value = frequency;
+  oscillator.connect(gainNode);
+  oscillator.start(startTime);
+  oscillator.stop(startTime + duration);
+}
+
+const sounds = {
+  bell(ctx, now) {
+    playTone(ctx, now, 880, 0.35, "sine");
+    playTone(ctx, now + 0.18, 1320, 0.35, "sine");
+  },
+  chime(ctx, now) {
+    [1046, 784, 659].forEach((frequency, index) => {
+      playTone(ctx, now + index * 0.15, frequency, 0.4, "triangle");
+    });
+  },
+  beep(ctx, now) {
+    [0, 0.2, 0.4].forEach((offset) => {
+      playTone(ctx, now + offset, 1000, 0.12, "square");
+    });
+  },
+  alarm(ctx, now) {
+    for (let i = 0; i < 4; i += 1) {
+      playTone(ctx, now + i * 0.2, i % 2 === 0 ? 600 : 900, 0.18, "sawtooth");
+    }
+  },
+};
+
 function playChime() {
   const ctx = getAudioContext();
-  const now = ctx.currentTime;
-
-  [880, 1320].forEach((frequency, index) => {
-    const oscillator = ctx.createOscillator();
-    oscillator.type = "sine";
-    oscillator.frequency.value = frequency;
-    oscillator.connect(gainNode);
-
-    const startTime = now + index * 0.18;
-    oscillator.start(startTime);
-    oscillator.stop(startTime + 0.35);
-  });
+  const play = sounds[soundSelect.value] || sounds.bell;
+  play(ctx, ctx.currentTime);
 }
 
 function tick() {
   elapsedSeconds += 1;
   updateDisplay();
 
-  if (elapsedSeconds % CHIME_INTERVAL_SECONDS === 0) {
+  if (elapsedSeconds % getIntervalSeconds() === 0) {
     playChime();
   }
 }
@@ -95,6 +122,16 @@ toggleBtn.addEventListener("click", () => {
 });
 
 resetBtn.addEventListener("click", reset);
+
+previewBtn.addEventListener("click", () => {
+  getAudioContext();
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+  playChime();
+});
+
+intervalSelect.addEventListener("change", updateDisplay);
 
 volumeRange.addEventListener("input", () => {
   volumeValue.textContent = volumeRange.value;
