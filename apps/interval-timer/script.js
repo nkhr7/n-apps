@@ -1,21 +1,30 @@
 const timeDisplay = document.getElementById("timeDisplay");
-const nextChimeDisplay = document.getElementById("nextChime");
+const currentIntervalLabel = document.getElementById("currentIntervalLabel");
 const toggleBtn = document.getElementById("toggleBtn");
 const resetBtn = document.getElementById("resetBtn");
 const previewBtn = document.getElementById("previewBtn");
-const intervalSelect = document.getElementById("intervalSelect");
+const intervalList = document.getElementById("intervalList");
+const addIntervalBtn = document.getElementById("addIntervalBtn");
 const soundSelect = document.getElementById("soundSelect");
 const volumeRange = document.getElementById("volumeRange");
 const volumeValue = document.getElementById("volumeValue");
 
-let elapsedSeconds = 0;
+const MIN_MINUTES = 1;
+const MAX_MINUTES = 180;
+const DEFAULT_NEW_MINUTES = 5;
+
+let intervals = [5];
+let currentIndex = 0;
+let remainingSeconds = intervals[currentIndex] * 60;
 let isRunning = false;
 let intervalId = null;
 let audioContext = null;
 let gainNode = null;
 
-function getIntervalSeconds() {
-  return Number(intervalSelect.value) * 60;
+function clampMinutes(value) {
+  const parsed = Math.round(Number(value));
+  if (Number.isNaN(parsed)) return DEFAULT_NEW_MINUTES;
+  return Math.min(MAX_MINUTES, Math.max(MIN_MINUTES, parsed));
 }
 
 function formatTime(totalSeconds) {
@@ -25,10 +34,39 @@ function formatTime(totalSeconds) {
 }
 
 function updateDisplay() {
-  timeDisplay.textContent = formatTime(elapsedSeconds);
-  const intervalSeconds = getIntervalSeconds();
-  const remaining = intervalSeconds - (elapsedSeconds % intervalSeconds);
-  nextChimeDisplay.textContent = `次の音まで ${formatTime(remaining)}`;
+  timeDisplay.textContent = formatTime(remainingSeconds);
+  currentIntervalLabel.textContent = `${currentIndex + 1} / ${intervals.length} · ${intervals[currentIndex]}分`;
+}
+
+function renderIntervalList() {
+  intervalList.innerHTML = "";
+
+  intervals.forEach((minutes, index) => {
+    const row = document.createElement("li");
+    row.className = "interval-row" + (index === currentIndex ? " active" : "");
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.min = String(MIN_MINUTES);
+    input.max = String(MAX_MINUTES);
+    input.value = minutes;
+    input.dataset.index = String(index);
+
+    const unit = document.createElement("span");
+    unit.className = "unit";
+    unit.textContent = "分";
+
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.className = "remove-btn";
+    removeBtn.textContent = "×";
+    removeBtn.dataset.index = String(index);
+    removeBtn.disabled = intervals.length <= 1;
+    removeBtn.setAttribute("aria-label", "削除");
+
+    row.append(input, unit, removeBtn);
+    intervalList.appendChild(row);
+  });
 }
 
 function getAudioContext() {
@@ -78,13 +116,21 @@ function playChime() {
   play(ctx, ctx.currentTime);
 }
 
-function tick() {
-  elapsedSeconds += 1;
-  updateDisplay();
+function goToInterval(index) {
+  currentIndex = index;
+  remainingSeconds = intervals[currentIndex] * 60;
+}
 
-  if (elapsedSeconds % getIntervalSeconds() === 0) {
+function tick() {
+  remainingSeconds -= 1;
+
+  if (remainingSeconds <= 0) {
     playChime();
+    goToInterval((currentIndex + 1) % intervals.length);
   }
+
+  updateDisplay();
+  renderIntervalList();
 }
 
 function start() {
@@ -109,8 +155,9 @@ function pause() {
 
 function reset() {
   pause();
-  elapsedSeconds = 0;
+  goToInterval(0);
   updateDisplay();
+  renderIntervalList();
 }
 
 toggleBtn.addEventListener("click", () => {
@@ -131,7 +178,41 @@ previewBtn.addEventListener("click", () => {
   playChime();
 });
 
-intervalSelect.addEventListener("change", updateDisplay);
+addIntervalBtn.addEventListener("click", () => {
+  intervals.push(DEFAULT_NEW_MINUTES);
+  renderIntervalList();
+});
+
+intervalList.addEventListener("change", (event) => {
+  const target = event.target;
+  if (!target.matches("input[type='number']")) return;
+
+  const index = Number(target.dataset.index);
+  intervals[index] = clampMinutes(target.value);
+  target.value = intervals[index];
+
+  if (index === currentIndex && !isRunning) {
+    remainingSeconds = intervals[currentIndex] * 60;
+    updateDisplay();
+  }
+});
+
+intervalList.addEventListener("click", (event) => {
+  const target = event.target;
+  if (!target.matches(".remove-btn") || target.disabled) return;
+
+  const index = Number(target.dataset.index);
+  intervals.splice(index, 1);
+
+  if (index < currentIndex) {
+    currentIndex -= 1;
+  } else if (index === currentIndex) {
+    goToInterval(Math.min(currentIndex, intervals.length - 1));
+  }
+
+  updateDisplay();
+  renderIntervalList();
+});
 
 volumeRange.addEventListener("input", () => {
   volumeValue.textContent = volumeRange.value;
@@ -141,3 +222,4 @@ volumeRange.addEventListener("input", () => {
 });
 
 updateDisplay();
+renderIntervalList();

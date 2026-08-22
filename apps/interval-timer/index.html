@@ -11,10 +11,10 @@
 
   <main class="timer-app">
     <h1>インターバルタイマー</h1>
-    <p class="description">設定した間隔で音が鳴ります</p>
+    <p class="description">複数の間隔をループしながら音が鳴ります</p>
 
-    <div class="time-display" id="timeDisplay">00:00</div>
-    <p class="next-chime" id="nextChime">次の音まで 05:00</p>
+    <div class="time-display" id="timeDisplay">05:00</div>
+    <p class="current-interval" id="currentIntervalLabel">1 / 1 &middot; 5分</p>
 
     <div class="controls">
       <button id="toggleBtn" class="btn btn-primary">再生</button>
@@ -22,17 +22,10 @@
     </div>
 
     <div class="settings">
-      <div class="setting-row">
-        <label for="intervalSelect">間隔</label>
-        <select id="intervalSelect">
-          <option value="1">1分</option>
-          <option value="3">3分</option>
-          <option value="5" selected>5分</option>
-          <option value="10">10分</option>
-          <option value="15">15分</option>
-          <option value="20">20分</option>
-          <option value="30">30分</option>
-        </select>
+      <div class="setting-group">
+        <p class="setting-label">間隔（ループ）</p>
+        <ul class="interval-list" id="intervalList"></ul>
+        <button id="addIntervalBtn" class="btn btn-small" type="button">時間追加</button>
       </div>
 
       <div class="setting-row">
