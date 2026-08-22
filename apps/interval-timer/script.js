@@ -12,10 +12,12 @@ const volumeValue = document.getElementById("volumeValue");
 const MIN_MINUTES = 1;
 const MAX_MINUTES = 180;
 const DEFAULT_NEW_MINUTES = 5;
+const STORAGE_KEY = "interval-timer:settings";
+const STORAGE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 1週間
 
 let intervals = [5];
 let currentIndex = 0;
-let remainingSeconds = intervals[currentIndex] * 60;
+let remainingSeconds = 0;
 let isRunning = false;
 let intervalId = null;
 let audioContext = null;
@@ -25,6 +27,55 @@ function clampMinutes(value) {
   const parsed = Math.round(Number(value));
   if (Number.isNaN(parsed)) return DEFAULT_NEW_MINUTES;
   return Math.min(MAX_MINUTES, Math.max(MIN_MINUTES, parsed));
+}
+
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+
+    const data = JSON.parse(raw);
+    if (!data || typeof data.savedAt !== "number") return null;
+    if (Date.now() - data.savedAt > STORAGE_TTL_MS) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    return data;
+  } catch (error) {
+    return null;
+  }
+}
+
+function saveSettings() {
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        intervals,
+        sound: soundSelect.value,
+        volume: volumeRange.value,
+        savedAt: Date.now(),
+      })
+    );
+  } catch (error) {
+    // localStorageが使えない場合は保存をあきらめる
+  }
+}
+
+function applySavedSettings() {
+  const saved = loadSettings();
+  if (!saved) return;
+
+  if (Array.isArray(saved.intervals) && saved.intervals.length > 0) {
+    intervals = saved.intervals.map(clampMinutes);
+  }
+  if (typeof saved.sound === "string" && sounds[saved.sound]) {
+    soundSelect.value = saved.sound;
+  }
+  if (typeof saved.volume !== "undefined") {
+    volumeRange.value = saved.volume;
+    volumeValue.textContent = volumeRange.value;
+  }
 }
 
 function formatTime(totalSeconds) {
@@ -181,6 +232,7 @@ previewBtn.addEventListener("click", () => {
 addIntervalBtn.addEventListener("click", () => {
   intervals.push(DEFAULT_NEW_MINUTES);
   renderIntervalList();
+  saveSettings();
 });
 
 intervalList.addEventListener("change", (event) => {
@@ -195,6 +247,7 @@ intervalList.addEventListener("change", (event) => {
     remainingSeconds = intervals[currentIndex] * 60;
     updateDisplay();
   }
+  saveSettings();
 });
 
 intervalList.addEventListener("click", (event) => {
@@ -212,14 +265,20 @@ intervalList.addEventListener("click", (event) => {
 
   updateDisplay();
   renderIntervalList();
+  saveSettings();
 });
+
+soundSelect.addEventListener("change", saveSettings);
 
 volumeRange.addEventListener("input", () => {
   volumeValue.textContent = volumeRange.value;
   if (gainNode) {
     gainNode.gain.value = Number(volumeRange.value) / 100;
   }
+  saveSettings();
 });
 
+applySavedSettings();
+goToInterval(0);
 updateDisplay();
 renderIntervalList();
