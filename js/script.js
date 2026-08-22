@@ -5,6 +5,11 @@ const apps = [
     description: "好きな間隔・音で鳴らせるインターバルタイマー",
     url: "apps/interval-timer/index.html",
   },
+  {
+    name: "YouTubeサムネイル抽出",
+    description: "URLを入力すると全サイズのサムネイルを表示",
+    url: "apps/youtube-thumbnail/index.html",
+  },
 ];
 
 function renderApps() {

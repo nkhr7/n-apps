@@ -10,7 +10,8 @@ JavaScriptで作る複数のWebアプリをまとめるリポジトリです。
 ├── css/style.css   # トップページのスタイル
 ├── js/script.js    # アプリ一覧を描画するスクリプト
 └── apps/
-    └── interval-timer/  # 5分おきに音が鳴るインターバルタイマー
+    ├── interval-timer/     # 複数の間隔をループするインターバルタイマー
+    └── youtube-thumbnail/  # YouTube URLから全サイズのサムネイルを表示
 ```
 
 ## 新しいアプリの追加方法

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTubeサムネイル抽出 | n-apps</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="back-link" href="../../index.html">&larr; トップページに戻る</a>
+
+  <main class="app">
+    <h1>YouTubeサムネイル抽出</h1>
+    <p class="description">YouTubeのURLを入力すると、全サイズのサムネイル画像を表示します</p>
+
+    <form id="thumbnailForm" class="url-form">
+      <input
+        type="text"
+        id="urlInput"
+        placeholder="https://www.youtube.com/watch?v=..."
+        autocomplete="off"
+      >
+      <button type="submit" class="btn btn-primary">取得</button>
+    </form>
+
+    <p id="errorMessage" class="error-message" hidden></p>
+
+    <div id="resultArea" class="result-area" hidden>
+      <p class="video-id">Video ID: <code id="videoIdText"></code></p>
+      <div id="thumbnailGrid" class="thumbnail-grid"></div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
