@@ -168,7 +168,7 @@ clearItemsBtn.addEventListener("click", () => {
   items = [];
   saveItems();
   render();
-  resultText.hidden = true;
+  resultText.textContent = "";
 });
 
 spinBtn.addEventListener("click", () => {
@@ -188,7 +188,7 @@ spinBtn.addEventListener("click", () => {
 
   isSpinning = true;
   spinBtn.disabled = true;
-  resultText.hidden = true;
+  resultText.textContent = "";
   wheelSvg.style.transform = `rotate(${currentRotation}deg)`;
 
   wheelSvg.addEventListener(
@@ -196,8 +196,7 @@ spinBtn.addEventListener("click", () => {
     () => {
       isSpinning = false;
       spinBtn.disabled = items.length < MIN_ITEMS_TO_SPIN;
-      resultText.textContent = `結果: ${items[winnerIndex]}`;
-      resultText.hidden = false;
+      resultText.textContent = items[winnerIndex];
     },
     { once: true }
   );
