@@ -19,18 +19,6 @@ body {
   color: var(--color-text);
 }
 
-.back-link {
-  display: inline-block;
-  margin: 1.5rem;
-  color: var(--color-muted);
-  text-decoration: none;
-  font-size: 0.9rem;
-}
-
-.back-link:hover {
-  color: var(--color-accent);
-}
-
 .timer-app {
   max-width: 420px;
   margin: 2rem auto 4rem;

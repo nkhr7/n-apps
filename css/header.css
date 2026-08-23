@@ -1,0 +1,105 @@
+.site-nav {
+  border-bottom: 1px solid #e3e3e8;
+  background: #ffffff;
+}
+
+.site-nav-bar {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-nav-brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #1f1f1f;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #e3e3e8;
+  background: #fff;
+  color: #1f1f1f;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.nav-toggle:hover {
+  background: #f0f0f4;
+}
+
+.nav-toggle-icon {
+  display: inline-block;
+  width: 16px;
+  height: 2px;
+  background: currentColor;
+  position: relative;
+}
+
+.nav-toggle-icon::before,
+.nav-toggle-icon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 16px;
+  height: 2px;
+  background: currentColor;
+  transition: transform 0.15s ease;
+}
+
+.nav-toggle-icon::before {
+  top: -5px;
+}
+
+.nav-toggle-icon::after {
+  top: 5px;
+}
+
+.nav-toggle.is-open .nav-toggle-icon {
+  background: transparent;
+}
+
+.nav-toggle.is-open .nav-toggle-icon::before {
+  transform: translateY(5px) rotate(45deg);
+}
+
+.nav-toggle.is-open .nav-toggle-icon::after {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+.nav-menu {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nav-menu a {
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  color: #1f1f1f;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.nav-menu a:hover {
+  background: #f0f0f4;
+}
+
+.nav-menu a.active {
+  color: #3b5bfd;
+  font-weight: 600;
+  background: #eef1ff;
+}

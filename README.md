@@ -6,9 +6,13 @@ JavaScriptで作る複数のWebアプリをまとめるリポジトリです。
 
 ```
 .
-├── index.html      # トップページ
-├── css/style.css   # トップページのスタイル
-├── js/script.js    # アプリ一覧を描画するスクリプト
+├── index.html        # トップページ
+├── css/
+│   ├── style.css     # トップページのスタイル
+│   └── header.css     # 全ページ共通の開閉メニュー用スタイル
+├── js/
+│   ├── script.js      # アプリ一覧を描画するスクリプト
+│   └── header.js      # 全ページ共通の開閉メニュー用スクリプト
 └── apps/
     ├── interval-timer/     # 複数の間隔をループするインターバルタイマー
     └── youtube-thumbnail/  # YouTube URLから全サイズのサムネイルを表示
@@ -26,6 +30,9 @@ JavaScriptで作る複数のWebアプリをまとめるリポジトリです。
   url: "apps/todo/index.html",
 }
 ```
+
+3. 新しいアプリのページにも、既存ページと同じ開閉メニュー（`css/header.css` / `js/header.js` を読み込み、`<header class="site-nav">` のマークアップをコピー）を追加します。
+4. 追加した新しいページへのリンクを、`index.html` と既存の各アプリページの `#navMenu` にも追加します（メニューのリンクは各ページにハードコードしているため、手動での同期が必要です）。
 
 ## ローカルでの確認方法
 

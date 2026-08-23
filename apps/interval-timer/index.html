@@ -4,10 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>インターバルタイマー | n-apps</title>
+  <link rel="stylesheet" href="../../css/header.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <a class="back-link" href="../../index.html">&larr; トップページに戻る</a>
+  <header class="site-nav">
+    <div class="site-nav-bar">
+      <a class="site-nav-brand" href="../../index.html">n-apps</a>
+      <button id="navToggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="navMenu">
+        <span class="nav-toggle-icon"></span>
+        メニュー
+      </button>
+    </div>
+    <nav id="navMenu" class="nav-menu" hidden>
+      <a href="../../index.html">トップページ</a>
+      <a href="../interval-timer/index.html">インターバルタイマー</a>
+      <a href="../youtube-thumbnail/index.html">YouTubeサムネイル抽出</a>
+    </nav>
+  </header>
 
   <main class="timer-app">
     <h1>インターバルタイマー</h1>
@@ -48,6 +62,7 @@
     </div>
   </main>
 
+  <script src="../../js/header.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

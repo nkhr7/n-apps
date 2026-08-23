@@ -4,9 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>n-apps</title>
+  <link rel="stylesheet" href="css/header.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <header class="site-nav">
+    <div class="site-nav-bar">
+      <a class="site-nav-brand" href="index.html">n-apps</a>
+      <button id="navToggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="navMenu">
+        <span class="nav-toggle-icon"></span>
+        メニュー
+      </button>
+    </div>
+    <nav id="navMenu" class="nav-menu" hidden>
+      <a href="index.html">トップページ</a>
+      <a href="apps/interval-timer/index.html">インターバルタイマー</a>
+      <a href="apps/youtube-thumbnail/index.html">YouTubeサムネイル抽出</a>
+    </nav>
+  </header>
+
   <header class="site-header">
     <h1>n-apps</h1>
     <p class="tagline">JavaScriptで作る小さなWebアプリ集</p>
@@ -22,6 +38,7 @@
     <p>&copy; 2026 n-apps</p>
   </footer>
 
+  <script src="js/header.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
