@@ -42,6 +42,11 @@
 
     <section class="select-block">
       <h2>都道府県</h2>
+      <div class="order-toggle">
+        <label><input type="radio" name="prefValueFormat" value="kanji" checked> valueを漢字（例: 北海道）</label>
+        <label><input type="radio" name="prefValueFormat" value="romaji"> valueをローマ字（例: hokkaido）</label>
+        <label><input type="radio" name="prefValueFormat" value="code"> valueを数字2桁（例: 01）</label>
+      </div>
       <select id="prefPreview" class="preview-select"></select>
       <pre class="code-block" id="prefCode"></pre>
       <button class="btn" type="button" data-copy-target="prefCode">コピー</button>
