@@ -76,10 +76,22 @@
     <section>
       <h2>お問い合わせ</h2>
       <p>本ポリシーに関するお問い合わせは、下記までご連絡ください。</p>
-      <p><a href="mailto:nkhr7.contact@gmail.com">nkhr7.contact@gmail.com</a></p>
+      <p id="contactEmail"></p>
     </section>
   </main>
 
   <script src="../js/header.js"></script>
+  <script>
+    (function () {
+      // 迷惑メール収集ボット対策として文字コードから組み立てる
+      var codes = [110, 107, 104, 114, 55, 46, 99, 111, 110, 116, 97, 99, 116, 64, 103, 109, 97, 105, 108, 46, 99, 111, 109];
+      var email = String.fromCharCode.apply(null, codes);
+      var container = document.getElementById("contactEmail");
+      var link = document.createElement("a");
+      link.href = "mailto:" + email;
+      link.textContent = email;
+      container.appendChild(link);
+    })();
+  </script>
 </body>
 </html>
