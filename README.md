@@ -13,7 +13,7 @@ JavaScriptで作る複数のWebアプリをまとめるリポジトリです。
 ├── js/
 │   ├── script.js      # アプリ一覧を描画するスクリプト
 │   └── header.js      # 全ページ共通の開閉メニュー用スクリプト
-├── privacy/           # プライバシーポリシー（AdSense審査用）
+├── privacy/           # プライバシーポリシー
 └── apps/
     ├── interval-timer/     # 複数の間隔をループするインターバルタイマー
     ├── youtube-thumbnail/  # YouTube URLから全サイズのサムネイルを表示
@@ -44,37 +44,6 @@ JavaScriptで作る複数のWebアプリをまとめるリポジトリです。
 npx serve .
 ```
 
-## Google Analytics（GA4）
-
-全ページの `<head>` に、測定ID `G-V08S2K6KE4` のgtag.jsスニペットを設置済みです。新しいアプリページを追加する際は、`<meta charset>` の直後に同じスニペットをコピーしてください。
-
-```html
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-V08S2K6KE4"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-V08S2K6KE4');
-</script>
-```
-
-## Google AdSense
-
-パブリッシャーID `ca-pub-4538219357223464` で審査用のコードを設置済みです。
-
-- 全ページの `<head>` に確認用メタタグ（`google-adsense-account`）と確認用スクリプト（`adsbygoogle.js`）を設置
-- リポジトリ直下に `ads.txt` を設置（`google.com, pub-4538219357223464, DIRECT, f08c47fec0942fa0`）
-
-新しいアプリページを追加する際は、同じメタタグ・スクリプトを `<meta charset>` の直後にコピーしてください。
-
-```html
-<meta name="google-adsense-account" content="ca-pub-4538219357223464">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4538219357223464" crossorigin="anonymous"></script>
-```
-
-審査に通過し、実際に広告を表示する段階になったら、広告を出したい箇所に `<ins class="adsbygoogle">` タグと `(adsbygoogle = window.adsbygoogle || []).push({});` を追加してください（広告ユニットのコードはGoogle AdSenseの管理画面で発行されます）。
-
 ## プライバシーポリシー
 
-`privacy/index.html` に、AdSense審査用の小規模サイト向けテンプレートを設置しています。お問い合わせ先メールアドレスは迷惑メール収集ボット対策のため、HTMLに平文で書かずJavaScriptで組み立てて表示しています。
+`privacy/index.html` に、小規模サイト向けのプライバシーポリシーテンプレートを設置しています。お問い合わせ先メールアドレスは迷惑メール収集ボット対策のため、HTMLに平文で書かずJavaScriptで組み立てて表示しています。
