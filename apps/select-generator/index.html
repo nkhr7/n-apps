@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V08S2K6KE4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-V08S2K6KE4');
+  </script>
+
+  <title>selectタグ生成 | n-apps</title>
+  <link rel="stylesheet" href="../../css/header.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-nav">
+    <div class="site-nav-bar">
+      <a class="site-nav-brand" href="../../index.html">n-apps</a>
+      <button id="navToggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="navMenu">
+        <span class="nav-toggle-icon"></span>
+        メニュー
+      </button>
+    </div>
+    <nav id="navMenu" class="nav-menu" hidden>
+      <a href="../../index.html">トップページ</a>
+      <a href="../interval-timer/index.html">インターバルタイマー</a>
+      <a href="../youtube-thumbnail/index.html">YouTubeサムネイル抽出</a>
+      <a href="../roulette/index.html">ルーレット</a>
+      <a href="../select-generator/index.html">selectタグ生成</a>
+      <a href="../../privacy/index.html">プライバシーポリシー</a>
+    </nav>
+  </header>
+
+  <main class="app">
+    <h1>selectタグ生成</h1>
+    <p class="description">よく使うHTMLの&lt;select&gt;タグをボタン1つでコピーできます</p>
+
+    <section class="select-block">
+      <h2>都道府県</h2>
+      <select id="prefPreview" class="preview-select"></select>
+      <pre class="code-block" id="prefCode"></pre>
+      <button class="btn" type="button" data-copy-target="prefCode">コピー</button>
+    </section>
+
+    <section class="select-block">
+      <h2>年（今年から80年）</h2>
+      <div class="order-toggle">
+        <label><input type="radio" name="yearOrder" value="desc" checked> 降順（新しい年→古い年）</label>
+        <label><input type="radio" name="yearOrder" value="asc"> 昇順（古い年→新しい年）</label>
+      </div>
+      <select id="yearPreview" class="preview-select"></select>
+      <pre class="code-block" id="yearCode"></pre>
+      <button class="btn" type="button" data-copy-target="yearCode">コピー</button>
+    </section>
+
+    <section class="select-block">
+      <h2>月（1〜12月）</h2>
+      <select id="monthPreview" class="preview-select"></select>
+      <pre class="code-block" id="monthCode"></pre>
+      <button class="btn" type="button" data-copy-target="monthCode">コピー</button>
+    </section>
+
+    <section class="select-block">
+      <h2>日（1〜31日）</h2>
+      <select id="dayPreview" class="preview-select"></select>
+      <pre class="code-block" id="dayCode"></pre>
+      <button class="btn" type="button" data-copy-target="dayCode">コピー</button>
+    </section>
+  </main>
+
+  <script src="../../js/header.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+:root {
+  --color-bg: #f7f7f9;
+  --color-text: #1f1f1f;
+  --color-muted: #6b6b6b;
+  --color-accent: #3b5bfd;
+  --color-card-bg: #ffffff;
+  --color-border: #e3e3e8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.app {
+  max-width: 640px;
+  margin: 2rem auto 4rem;
+  padding: 0 1.5rem;
+}
+
+.app h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.description {
+  margin: 0 0 2rem;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.select-block {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.select-block h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+}
+
+.order-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+.order-toggle label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+
+.preview-select {
+  display: block;
+  width: 100%;
+  max-width: 260px;
+  padding: 0.5rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+
+.code-block {
+  margin: 0 0 0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: #f0f0f4;
+  border: 1px solid var(--color-border);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  white-space: pre;
+  overflow-x: auto;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.btn {
+  padding: 0.55rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #f0f0f4;
+}

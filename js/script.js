@@ -15,6 +15,11 @@ const apps = [
     description: "項目を登録してランダムに1つ選ぶルーレット",
     url: "apps/roulette/index.html",
   },
+  {
+    name: "selectタグ生成",
+    description: "都道府県・年・月・日のselectタグをコピー",
+    url: "apps/select-generator/index.html",
+  },
 ];
 
 function renderApps() {

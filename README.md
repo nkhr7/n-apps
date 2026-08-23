@@ -17,7 +17,8 @@ JavaScriptで作る複数のWebアプリをまとめるリポジトリです。
 └── apps/
     ├── interval-timer/     # 複数の間隔をループするインターバルタイマー
     ├── youtube-thumbnail/  # YouTube URLから全サイズのサムネイルを表示
-    └── roulette/            # 項目を登録してランダムに1つ選ぶルーレット
+    ├── roulette/            # 項目を登録してランダムに1つ選ぶルーレット
+    └── select-generator/    # 都道府県・年・月・日のselectタグを生成してコピー
 ```
 
 ## 新しいアプリの追加方法
