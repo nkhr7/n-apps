@@ -17,7 +17,7 @@
     gtag('config', 'G-V08S2K6KE4');
   </script>
 
-  <title>インターバルタイマー | n-apps</title>
+  <title>ルーレット | n-apps</title>
   <link rel="stylesheet" href="../../css/header.css">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -39,41 +39,32 @@
     </nav>
   </header>
 
-  <main class="timer-app">
-    <h1>インターバルタイマー</h1>
-    <p class="description">複数の間隔をループしながら音が鳴ります</p>
+  <main class="roulette-app">
+    <h1>ルーレット</h1>
+    <p class="description">項目を登録して、ルーレットでランダムに1つ選びます</p>
 
-    <div class="time-display" id="timeDisplay">05:00</div>
-    <p class="current-interval" id="currentIntervalLabel">1 / 1 &middot; 5分</p>
-
-    <div class="controls">
-      <button id="toggleBtn" class="btn btn-primary">再生</button>
-      <button id="resetBtn" class="btn">リセット</button>
-      <button id="tabTitleToggleBtn" class="btn" type="button">タイマーをタブに表示</button>
+    <div class="wheel-area">
+      <div class="wheel-pointer"></div>
+      <div class="wheel-wrap">
+        <svg id="wheelSvg" class="wheel" viewBox="0 0 200 200" width="280" height="280">
+          <circle cx="100" cy="100" r="94" class="wheel-outline"></circle>
+          <g id="wheelSlices"></g>
+        </svg>
+      </div>
     </div>
+
+    <button id="spinBtn" class="btn btn-primary" type="button">ルーレットを回す</button>
+    <p id="resultText" class="result-text" hidden></p>
 
     <div class="settings">
       <div class="setting-group">
-        <p class="setting-label">間隔（ループ）</p>
-        <ul class="interval-list" id="intervalList"></ul>
-        <button id="addIntervalBtn" class="btn btn-small" type="button">時間追加</button>
-      </div>
-
-      <div class="setting-row">
-        <label for="soundSelect">音の種類</label>
-        <select id="soundSelect">
-          <option value="bell" selected>ベル</option>
-          <option value="chime">チャイム</option>
-          <option value="beep">ビープ</option>
-          <option value="alarm">アラーム</option>
-        </select>
-        <button id="previewBtn" class="btn btn-small" type="button">試聴</button>
-      </div>
-
-      <div class="setting-row">
-        <label for="volumeRange">音量</label>
-        <input type="range" id="volumeRange" min="0" max="100" value="50">
-        <span id="volumeValue">50</span>
+        <p class="setting-label">登録した項目</p>
+        <form id="itemForm" class="item-form">
+          <input type="text" id="itemInput" placeholder="項目を入力" autocomplete="off" maxlength="20">
+          <button type="submit" class="btn btn-small">追加</button>
+        </form>
+        <ul class="item-list" id="itemList"></ul>
+        <button id="clearItemsBtn" class="btn btn-small" type="button">全て削除</button>
       </div>
     </div>
   </main>

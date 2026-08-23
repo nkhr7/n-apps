@@ -10,6 +10,11 @@ const apps = [
     description: "URLを入力すると全サイズのサムネイルを表示",
     url: "apps/youtube-thumbnail/index.html",
   },
+  {
+    name: "ルーレット",
+    description: "項目を登録してランダムに1つ選ぶルーレット",
+    url: "apps/roulette/index.html",
+  },
 ];
 
 function renderApps() {
