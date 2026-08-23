@@ -41,3 +41,31 @@ JavaScriptで作る複数のWebアプリをまとめるリポジトリです。
 ```sh
 npx serve .
 ```
+
+## Google Analytics（GA4）
+
+全ページの `<head>` に、測定ID `G-V08S2K6KE4` のgtag.jsスニペットを設置済みです。新しいアプリページを追加する際は、`<meta charset>` の直後に同じスニペットをコピーしてください。
+
+```html
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V08S2K6KE4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-V08S2K6KE4');
+</script>
+```
+
+## Google AdSense（審査後に設置予定）
+
+現時点ではパブリッシャーID未取得のため未設置です。審査に通過してID（`ca-pub-`から始まるID）が発行されたら、以下を対応してください。
+
+1. 各ページの `<head>` に確認用スニペットを追加
+   ```html
+   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+   ```
+2. リポジトリ直下に `ads.txt` を作成し、Google側の指示内容（`google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0` の形式）を記載
+3. 広告を表示したい箇所に `<ins class="adsbygoogle">` タグと `(adsbygoogle = window.adsbygoogle || []).push({});` を追加
+
+パブリッシャーIDが分かったら教えてください。上記を実装します。
