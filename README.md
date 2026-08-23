@@ -13,6 +13,7 @@ JavaScriptで作る複数のWebアプリをまとめるリポジトリです。
 ├── js/
 │   ├── script.js      # アプリ一覧を描画するスクリプト
 │   └── header.js      # 全ページ共通の開閉メニュー用スクリプト
+├── privacy/           # プライバシーポリシー（AdSense審査用）
 └── apps/
     ├── interval-timer/     # 複数の間隔をループするインターバルタイマー
     └── youtube-thumbnail/  # YouTube URLから全サイズのサムネイルを表示
@@ -69,3 +70,9 @@ npx serve .
 3. 広告を表示したい箇所に `<ins class="adsbygoogle">` タグと `(adsbygoogle = window.adsbygoogle || []).push({});` を追加
 
 パブリッシャーIDが分かったら教えてください。上記を実装します。
+
+## プライバシーポリシー
+
+`privacy/index.html` に、AdSense審査用の小規模サイト向けテンプレートを設置しています。実際に運用する際は、以下を確認・編集してください。
+
+- 「お問い合わせ」セクションの連絡先（現在は `[お問い合わせ先メールアドレスをご記入ください]` のプレースホルダーです）
