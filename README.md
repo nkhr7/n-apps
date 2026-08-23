@@ -58,18 +58,21 @@ npx serve .
 </script>
 ```
 
-## Google AdSense（審査後に設置予定）
+## Google AdSense
 
-現時点ではパブリッシャーID未取得のため未設置です。審査に通過してID（`ca-pub-`から始まるID）が発行されたら、以下を対応してください。
+パブリッシャーID `ca-pub-4538219357223464` で審査用のコードを設置済みです。
 
-1. 各ページの `<head>` に確認用スニペットを追加
-   ```html
-   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
-   ```
-2. リポジトリ直下に `ads.txt` を作成し、Google側の指示内容（`google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0` の形式）を記載
-3. 広告を表示したい箇所に `<ins class="adsbygoogle">` タグと `(adsbygoogle = window.adsbygoogle || []).push({});` を追加
+- 全ページの `<head>` に確認用メタタグ（`google-adsense-account`）と確認用スクリプト（`adsbygoogle.js`）を設置
+- リポジトリ直下に `ads.txt` を設置（`google.com, pub-4538219357223464, DIRECT, f08c47fec0942fa0`）
 
-パブリッシャーIDが分かったら教えてください。上記を実装します。
+新しいアプリページを追加する際は、同じメタタグ・スクリプトを `<meta charset>` の直後にコピーしてください。
+
+```html
+<meta name="google-adsense-account" content="ca-pub-4538219357223464">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4538219357223464" crossorigin="anonymous"></script>
+```
+
+審査に通過し、実際に広告を表示する段階になったら、広告を出したい箇所に `<ins class="adsbygoogle">` タグと `(adsbygoogle = window.adsbygoogle || []).push({});` を追加してください（広告ユニットのコードはGoogle AdSenseの管理画面で発行されます）。
 
 ## プライバシーポリシー
 
