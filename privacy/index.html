@@ -3,6 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- index.html を末尾に含むURLを、ディレクトリURLへ正規化する -->
+  <script>
+    if (location.pathname.endsWith("/index.html")) {
+      location.replace(location.pathname.slice(0, -"index.html".length) + location.search + location.hash);
+    }
+  </script>
+  <link rel="canonical" href="./">
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-V08S2K6KE4"></script>
   <script>
@@ -19,19 +28,19 @@
 <body>
   <header class="site-nav">
     <div class="site-nav-bar">
-      <a class="site-nav-brand" href="../index.html">n-apps</a>
+      <a class="site-nav-brand" href="../">n-apps</a>
       <button id="navToggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="navMenu">
         <span class="nav-toggle-icon"></span>
         メニュー
       </button>
     </div>
     <nav id="navMenu" class="nav-menu" hidden>
-      <a href="../index.html">トップページ</a>
-      <a href="../apps/interval-timer/index.html">インターバルタイマー</a>
-      <a href="../apps/youtube-thumbnail/index.html">YouTubeサムネイル抽出</a>
-      <a href="../apps/roulette/index.html">ルーレット</a>
-      <a href="../apps/select-generator/index.html">selectタグ生成</a>
-      <a href="../privacy/index.html">プライバシーポリシー</a>
+      <a href="../">トップページ</a>
+      <a href="../apps/interval-timer/">インターバルタイマー</a>
+      <a href="../apps/youtube-thumbnail/">YouTubeサムネイル抽出</a>
+      <a href="../apps/roulette/">ルーレット</a>
+      <a href="../apps/select-generator/">selectタグ生成</a>
+      <a href="../privacy/">プライバシーポリシー</a>
     </nav>
   </header>
 

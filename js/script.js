@@ -3,22 +3,22 @@ const apps = [
   {
     name: "インターバルタイマー",
     description: "好きな間隔・音で鳴らせるインターバルタイマー",
-    url: "apps/interval-timer/index.html",
+    url: "apps/interval-timer/",
   },
   {
     name: "YouTubeサムネイル抽出",
     description: "URLを入力すると全サイズのサムネイルを表示",
-    url: "apps/youtube-thumbnail/index.html",
+    url: "apps/youtube-thumbnail/",
   },
   {
     name: "ルーレット",
     description: "項目を登録してランダムに1つ選ぶルーレット",
-    url: "apps/roulette/index.html",
+    url: "apps/roulette/",
   },
   {
     name: "selectタグ生成",
     description: "都道府県・年・月・日のselectタグをコピー",
-    url: "apps/select-generator/index.html",
+    url: "apps/select-generator/",
   },
 ];
 
