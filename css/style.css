@@ -80,11 +80,3 @@ main {
   pointer-events: none;
   border-style: dashed;
 }
-
-.site-footer {
-  margin-top: 48px;
-  text-align: center;
-  padding: 1.5rem;
-  color: var(--color-muted);
-  font-size: 0.85rem;
-}

@@ -107,3 +107,11 @@
   font-weight: 600;
   background: #eef1ff;
 }
+
+.site-footer {
+  margin-top: 48px;
+  text-align: center;
+  padding: 1.5rem;
+  color: #6b6b6b;
+  font-size: 0.85rem;
+}
