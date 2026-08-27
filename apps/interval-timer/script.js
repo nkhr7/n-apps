@@ -26,9 +26,9 @@ let isRunning = false;
 let intervalId = null;
 let audioContext = null;
 let gainNode = null;
-let keepAliveOscillator = null;
-let keepAliveGain = null;
 let isTabTitleEnabled = false;
+let scheduledPhaseEndAt = null;
+let scheduledOscillators = [];
 
 function clampMinutes(value) {
   const parsed = Math.round(Number(value));
@@ -151,27 +151,30 @@ function playTone(ctx, startTime, frequency, duration, type = "sine") {
   oscillator.connect(gainNode);
   oscillator.start(startTime);
   oscillator.stop(startTime + duration);
+  return oscillator;
 }
 
 const sounds = {
   bell(ctx, now) {
-    playTone(ctx, now, 880, 0.35, "sine");
-    playTone(ctx, now + 0.18, 1320, 0.35, "sine");
+    return [
+      playTone(ctx, now, 880, 0.35, "sine"),
+      playTone(ctx, now + 0.18, 1320, 0.35, "sine"),
+    ];
   },
   chime(ctx, now) {
-    [1046, 784, 659].forEach((frequency, index) => {
-      playTone(ctx, now + index * 0.15, frequency, 0.4, "triangle");
-    });
+    return [1046, 784, 659].map((frequency, index) =>
+      playTone(ctx, now + index * 0.15, frequency, 0.4, "triangle")
+    );
   },
   beep(ctx, now) {
-    [0, 0.2, 0.4].forEach((offset) => {
-      playTone(ctx, now + offset, 1000, 0.12, "square");
-    });
+    return [0, 0.2, 0.4].map((offset) => playTone(ctx, now + offset, 1000, 0.12, "square"));
   },
   alarm(ctx, now) {
+    const nodes = [];
     for (let i = 0; i < 4; i += 1) {
-      playTone(ctx, now + i * 0.2, i % 2 === 0 ? 600 : 900, 0.18, "sawtooth");
+      nodes.push(playTone(ctx, now + i * 0.2, i % 2 === 0 ? 600 : 900, 0.18, "sawtooth"));
     }
+    return nodes;
   },
 };
 
@@ -181,39 +184,44 @@ function playChime() {
   play(ctx, ctx.currentTime);
 }
 
-// バックグラウンドタブでのタイマー抑制対策として、ごく小さな音量で
-// 音声を鳴らし続け、ブラウザに「音を再生中のタブ」として認識させる
-function startKeepAlive() {
+// 次の区間終了時刻に、Web Audio APIの時間軸で前もって音を予約する。
+// 予約した音の再生自体はブラウザの音声処理スレッドが担うため、
+// タブがバックグラウンドで間引かれても指定時刻に正確に鳴る。
+function scheduleUpcomingChime() {
+  if (!isRunning || scheduledPhaseEndAt === phaseEndAt) return;
+
   const ctx = getAudioContext();
-  if (keepAliveOscillator) return;
+  const secondsFromNow = (phaseEndAt - Date.now()) / 1000;
+  if (secondsFromNow <= 0) return;
 
-  keepAliveGain = ctx.createGain();
-  keepAliveGain.gain.value = 0.001;
-  keepAliveGain.connect(ctx.destination);
-
-  keepAliveOscillator = ctx.createOscillator();
-  keepAliveOscillator.frequency.value = 20;
-  keepAliveOscillator.connect(keepAliveGain);
-  keepAliveOscillator.start();
+  const play = sounds[soundSelect.value] || sounds.bell;
+  const nodes = play(ctx, ctx.currentTime + secondsFromNow);
+  scheduledOscillators.push(...nodes);
+  scheduledPhaseEndAt = phaseEndAt;
 }
 
-function stopKeepAlive() {
-  if (keepAliveOscillator) {
-    keepAliveOscillator.stop();
-    keepAliveOscillator.disconnect();
-    keepAliveOscillator = null;
+// 予約済みの音を取り消す（一時停止・リセット・設定変更時に使用）
+function cancelScheduledChime() {
+  if (audioContext) {
+    scheduledOscillators.forEach((oscillator) => {
+      try {
+        oscillator.stop(audioContext.currentTime);
+      } catch (error) {
+        // 既に再生済み・停止済みの場合は無視
+      }
+    });
   }
-  if (keepAliveGain) {
-    keepAliveGain.disconnect();
-    keepAliveGain = null;
-  }
+  scheduledOscillators = [];
+  scheduledPhaseEndAt = null;
 }
 
 function goToInterval(index) {
   currentIndex = index;
   remainingSeconds = intervals[currentIndex] * 60;
   if (isRunning) {
+    cancelScheduledChime();
     phaseEndAt = Date.now() + remainingSeconds * 1000;
+    scheduleUpcomingChime();
   }
 }
 
@@ -228,18 +236,21 @@ function syncState() {
   if (!isRunning) return;
 
   const now = Date.now();
-  let crossedBoundary = false;
+  let boundariesCrossed = 0;
 
   while (now >= phaseEndAt) {
     advanceInterval();
-    crossedBoundary = true;
+    boundariesCrossed += 1;
   }
 
-  if (crossedBoundary) {
+  // 2区間以上をまたいでいた場合、予約済みの音は1回分しか鳴らせていないため
+  // 復帰時に気づけるよう1回だけ知らせる
+  if (boundariesCrossed > 1) {
     playChime();
   }
 
   remainingSeconds = Math.max(0, Math.round((phaseEndAt - now) / 1000));
+  scheduleUpcomingChime();
 }
 
 function tick() {
@@ -259,18 +270,18 @@ function start() {
   phaseEndAt = Date.now() + remainingSeconds * 1000;
   toggleBtn.textContent = "一時停止";
   intervalId = setInterval(tick, 1000);
-  startKeepAlive();
+  scheduleUpcomingChime();
   updateTabTitle();
 }
 
 function pause() {
   if (!isRunning) return;
   syncState();
+  cancelScheduledChime();
   isRunning = false;
   toggleBtn.textContent = "再生";
   clearInterval(intervalId);
   intervalId = null;
-  stopKeepAlive();
   updateTabTitle();
   updateDisplay();
   renderIntervalList();
@@ -314,6 +325,7 @@ previewBtn.addEventListener("click", () => {
 
 addIntervalBtn.addEventListener("click", () => {
   intervals.push(DEFAULT_NEW_MINUTES);
+  updateDisplay();
   renderIntervalList();
   saveSettings();
 });
@@ -351,7 +363,13 @@ intervalList.addEventListener("click", (event) => {
   saveSettings();
 });
 
-soundSelect.addEventListener("change", saveSettings);
+soundSelect.addEventListener("change", () => {
+  if (isRunning) {
+    cancelScheduledChime();
+    scheduleUpcomingChime();
+  }
+  saveSettings();
+});
 
 volumeRange.addEventListener("input", () => {
   volumeValue.textContent = volumeRange.value;
