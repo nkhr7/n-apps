@@ -21,10 +21,13 @@ const originalTitle = document.title;
 let intervals = [5];
 let currentIndex = 0;
 let remainingSeconds = 0;
+let phaseEndAt = 0;
 let isRunning = false;
 let intervalId = null;
 let audioContext = null;
 let gainNode = null;
+let keepAliveOscillator = null;
+let keepAliveGain = null;
 let isTabTitleEnabled = false;
 
 function clampMinutes(value) {
@@ -178,19 +181,69 @@ function playChime() {
   play(ctx, ctx.currentTime);
 }
 
+// バックグラウンドタブでのタイマー抑制対策として、ごく小さな音量で
+// 音声を鳴らし続け、ブラウザに「音を再生中のタブ」として認識させる
+function startKeepAlive() {
+  const ctx = getAudioContext();
+  if (keepAliveOscillator) return;
+
+  keepAliveGain = ctx.createGain();
+  keepAliveGain.gain.value = 0.001;
+  keepAliveGain.connect(ctx.destination);
+
+  keepAliveOscillator = ctx.createOscillator();
+  keepAliveOscillator.frequency.value = 20;
+  keepAliveOscillator.connect(keepAliveGain);
+  keepAliveOscillator.start();
+}
+
+function stopKeepAlive() {
+  if (keepAliveOscillator) {
+    keepAliveOscillator.stop();
+    keepAliveOscillator.disconnect();
+    keepAliveOscillator = null;
+  }
+  if (keepAliveGain) {
+    keepAliveGain.disconnect();
+    keepAliveGain = null;
+  }
+}
+
 function goToInterval(index) {
   currentIndex = index;
   remainingSeconds = intervals[currentIndex] * 60;
+  if (isRunning) {
+    phaseEndAt = Date.now() + remainingSeconds * 1000;
+  }
+}
+
+function advanceInterval() {
+  currentIndex = (currentIndex + 1) % intervals.length;
+  phaseEndAt += intervals[currentIndex] * 60000;
+}
+
+// setIntervalの発火が遅延・間引きされても、実時間との差分から
+// 正しい残り時間と現在の区間に補正する
+function syncState() {
+  if (!isRunning) return;
+
+  const now = Date.now();
+  let crossedBoundary = false;
+
+  while (now >= phaseEndAt) {
+    advanceInterval();
+    crossedBoundary = true;
+  }
+
+  if (crossedBoundary) {
+    playChime();
+  }
+
+  remainingSeconds = Math.max(0, Math.round((phaseEndAt - now) / 1000));
 }
 
 function tick() {
-  remainingSeconds -= 1;
-
-  if (remainingSeconds <= 0) {
-    playChime();
-    goToInterval((currentIndex + 1) % intervals.length);
-  }
-
+  syncState();
   updateDisplay();
   renderIntervalList();
 }
@@ -203,18 +256,24 @@ function start() {
   }
 
   isRunning = true;
+  phaseEndAt = Date.now() + remainingSeconds * 1000;
   toggleBtn.textContent = "一時停止";
   intervalId = setInterval(tick, 1000);
+  startKeepAlive();
   updateTabTitle();
 }
 
 function pause() {
   if (!isRunning) return;
+  syncState();
   isRunning = false;
   toggleBtn.textContent = "再生";
   clearInterval(intervalId);
   intervalId = null;
+  stopKeepAlive();
   updateTabTitle();
+  updateDisplay();
+  renderIntervalList();
 }
 
 function reset() {
@@ -300,6 +359,13 @@ volumeRange.addEventListener("input", () => {
     gainNode.gain.value = Number(volumeRange.value) / 100;
   }
   saveSettings();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "visible" || !isRunning) return;
+  syncState();
+  updateDisplay();
+  renderIntervalList();
 });
 
 applySavedSettings();
