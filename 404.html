@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta http-equiv="refresh" content="6;url=/">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V08S2K6KE4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-V08S2K6KE4');
+  </script>
+
+  <title>ページが見つかりません | n-apps</title>
+  <link rel="stylesheet" href="/css/header.css">
+  <style>
+    :root {
+      --color-bg: #f7f7f9;
+      --color-text: #1f1f1f;
+      --color-muted: #6b6b6b;
+      --color-accent: #3b5bfd;
+      --color-border: #e3e3e8;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+    .not-found {
+      max-width: 480px;
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+    .not-found .code {
+      margin: 0;
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--color-accent);
+      letter-spacing: 0.05em;
+    }
+    .not-found h1 {
+      margin: 0.5rem 0 1rem;
+      font-size: 1.3rem;
+    }
+    .not-found p {
+      margin: 0 0 1.5rem;
+      color: var(--color-muted);
+      font-size: 0.95rem;
+    }
+    .not-found .btn {
+      display: inline-block;
+      padding: 0.75rem 1.75rem;
+      border-radius: 999px;
+      background: var(--color-accent);
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+    .not-found .btn:hover {
+      background: #2f4bd9;
+    }
+    .not-found .countdown {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-nav">
+    <div class="site-nav-bar">
+      <a class="site-nav-brand" href="/">n-apps</a>
+      <button id="navToggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="navMenu">
+        <span class="nav-toggle-icon"></span>
+        メニュー
+      </button>
+    </div>
+    <nav id="navMenu" class="nav-menu" hidden>
+      <a href="/">トップページ</a>
+      <a href="/apps/interval-timer/">インターバルタイマー</a>
+      <a href="/apps/youtube-thumbnail/">YouTubeサムネイル抽出</a>
+      <a href="/apps/roulette/">ルーレット</a>
+      <a href="/apps/select-generator/">selectタグ生成</a>
+      <a href="/privacy/">プライバシーポリシー</a>
+    </nav>
+  </header>
+
+  <main class="not-found">
+    <p class="code">404</p>
+    <h1>ページが見つかりませんでした</h1>
+    <p>お探しのページは移動または削除された可能性があります。URLをご確認いただくか、トップページからお探しください。</p>
+    <a class="btn" href="/">今すぐトップページへ</a>
+    <p class="countdown" id="countdown"></p>
+  </main>
+
+  <footer class="site-footer">
+    <p><small>&copy; 2026 n-apps</small></p>
+  </footer>
+
+  <script src="/js/header.js"></script>
+  <script>
+    (function () {
+      var seconds = 6;
+      var el = document.getElementById("countdown");
+
+      function render() {
+        el.textContent = seconds + "秒後に自動的にトップページへ移動します";
+      }
+
+      render();
+      var timer = setInterval(function () {
+        seconds -= 1;
+        if (seconds <= 0) {
+          clearInterval(timer);
+          window.location.href = "/";
+          return;
+        }
+        render();
+      }, 1000);
+    })();
+  </script>
+</body>
+</html>
