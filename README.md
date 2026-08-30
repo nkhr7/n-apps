@@ -8,6 +8,7 @@ JavaScriptで作る複数のWebアプリをまとめるリポジトリです。
 .
 ├── index.html        # トップページ
 ├── 404.html          # GitHub Pagesが自動的に使うカスタム404ページ
+├── favicon.png       # 全ページ共通のfavicon
 ├── css/
 │   ├── style.css     # トップページのスタイル
 │   └── header.css     # 全ページ共通の開閉メニュー用スタイル
@@ -35,7 +36,7 @@ JavaScriptで作る複数のWebアプリをまとめるリポジトリです。
 }
 ```
 
-3. 新しいアプリのページにも、既存ページと同じ開閉メニュー（`css/header.css` / `js/header.js` を読み込み、`<header class="site-nav">` のマークアップをコピー）を追加します。
+3. 新しいアプリのページにも、既存ページと同じ開閉メニュー（`css/header.css` / `js/header.js` を読み込み、`<header class="site-nav">` のマークアップをコピー）と、favicon（`<link rel="icon" type="image/png" href="/favicon.png">`）を追加します。
 4. 追加した新しいページへのリンクを、`index.html` と既存の各アプリページの `#navMenu` にも追加します（メニューのリンクは各ページにハードコードしているため、手動での同期が必要です）。
 5. サイト内リンクは `index.html` を含めず、末尾スラッシュ付きのディレクトリURL（例: `apps/todo/`）で統一してください。`index.html` に直接アクセスされた場合は、各ページの `<head>` に設置したスクリプトでディレクトリURLへ自動的にリダイレクトされます（`index.html`とディレクトリURLの2つのURLが併存しないようにするためです）。
 
