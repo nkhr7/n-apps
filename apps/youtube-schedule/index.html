@@ -84,6 +84,31 @@
       </div>
       <ul class="channel-list" id="channelList"></ul>
 
+      <div class="field-row checkbox-row">
+        <label><input type="checkbox" id="notifyEnabledInput" checked> 配信リストに変更があったら音を鳴らす</label>
+      </div>
+
+      <div class="field-row">
+        <label for="soundSelect">音の種類</label>
+        <div class="input-with-toggle">
+          <select id="soundSelect">
+            <option value="bell" selected>ベル</option>
+            <option value="chime">チャイム</option>
+            <option value="beep">ビープ</option>
+            <option value="alarm">アラーム</option>
+          </select>
+          <button id="previewBtn" class="btn btn-small" type="button">試聴</button>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <label for="volumeRange">音量</label>
+        <div class="input-with-toggle">
+          <input type="range" id="volumeRange" min="0" max="100" value="50">
+          <span id="volumeValue">50</span>
+        </div>
+      </div>
+
       <div class="controls">
         <button id="saveBtn" class="btn btn-primary" type="button">APIキー・更新間隔を保存</button>
         <button id="refreshBtn" class="btn" type="button">今すぐ確認</button>

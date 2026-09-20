@@ -15,10 +15,18 @@ const refreshBtn = document.getElementById("refreshBtn");
 const statusText = document.getElementById("statusText");
 const errorMessage = document.getElementById("errorMessage");
 const streamList = document.getElementById("streamList");
+const notifyEnabledInput = document.getElementById("notifyEnabledInput");
+const soundSelect = document.getElementById("soundSelect");
+const previewBtn = document.getElementById("previewBtn");
+const volumeRange = document.getElementById("volumeRange");
+const volumeValue = document.getElementById("volumeValue");
 
 let settings = loadSettings();
 let refreshTimer = null;
 let isChecking = false;
+let audioContext = null;
+let gainNode = null;
+let previousSignature = null;
 
 function loadSettings() {
   try {
@@ -42,6 +50,9 @@ function loadSettings() {
     return {
       apiKey: typeof parsed.apiKey === "string" ? parsed.apiKey : "",
       intervalMinutes: typeof parsed.intervalMinutes === "number" ? parsed.intervalMinutes : 10,
+      notifyEnabled: typeof parsed.notifyEnabled === "boolean" ? parsed.notifyEnabled : true,
+      sound: typeof parsed.sound === "string" ? parsed.sound : "bell",
+      volume: typeof parsed.volume !== "undefined" ? parsed.volume : 50,
       channels: channels.map((c) => ({
         input: c.input,
         resolvedChannelId: c.resolvedChannelId || null,
@@ -52,7 +63,7 @@ function loadSettings() {
       })),
     };
   } catch (error) {
-    return { apiKey: "", intervalMinutes: 10, channels: [] };
+    return { apiKey: "", intervalMinutes: 10, notifyEnabled: true, sound: "bell", volume: 50, channels: [] };
   }
 }
 
@@ -183,6 +194,66 @@ async function getLiveAndUpcoming(videoIds) {
       status: video.snippet.liveBroadcastContent,
       scheduledStartTime: video.liveStreamingDetails?.scheduledStartTime || null,
     }));
+}
+
+function getAudioContext() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    gainNode = audioContext.createGain();
+    gainNode.connect(audioContext.destination);
+    gainNode.gain.value = Number(volumeRange.value) / 100;
+  }
+  return audioContext;
+}
+
+function playTone(ctx, startTime, frequency, duration, type = "sine") {
+  const oscillator = ctx.createOscillator();
+  oscillator.type = type;
+  oscillator.frequency.value = frequency;
+  oscillator.connect(gainNode);
+  oscillator.start(startTime);
+  oscillator.stop(startTime + duration);
+  return oscillator;
+}
+
+const sounds = {
+  bell(ctx, now) {
+    return [
+      playTone(ctx, now, 880, 0.35, "sine"),
+      playTone(ctx, now + 0.18, 1320, 0.35, "sine"),
+    ];
+  },
+  chime(ctx, now) {
+    return [1046, 784, 659].map((frequency, index) =>
+      playTone(ctx, now + index * 0.15, frequency, 0.4, "triangle")
+    );
+  },
+  beep(ctx, now) {
+    return [0, 0.2, 0.4].map((offset) => playTone(ctx, now + offset, 1000, 0.12, "square"));
+  },
+  alarm(ctx, now) {
+    const nodes = [];
+    for (let i = 0; i < 4; i += 1) {
+      nodes.push(playTone(ctx, now + i * 0.2, i % 2 === 0 ? 600 : 900, 0.18, "sawtooth"));
+    }
+    return nodes;
+  },
+};
+
+function playChime() {
+  const ctx = getAudioContext();
+  if (ctx.state === "suspended") {
+    ctx.resume();
+  }
+  const play = sounds[soundSelect.value] || sounds.bell;
+  play(ctx, ctx.currentTime);
+}
+
+function signatureOf(items) {
+  return items
+    .map((item) => `${item.id}:${item.status}`)
+    .sort()
+    .join("|");
 }
 
 async function ensureChannelResolved(entry) {
@@ -391,6 +462,13 @@ async function checkNow() {
     }
   } else {
     const sorted = sortStreams(allItems);
+    const newSignature = signatureOf(sorted);
+
+    if (settings.notifyEnabled && previousSignature !== null && newSignature !== previousSignature) {
+      playChime();
+    }
+    previousSignature = newSignature;
+
     renderStreams(sorted);
     saveCache(sorted);
     if (failedChannels.length > 0) {
@@ -416,6 +494,10 @@ function restartAutoRefresh() {
 function applySettingsToForm() {
   apiKeyInput.value = settings.apiKey;
   intervalSelect.value = String(settings.intervalMinutes);
+  notifyEnabledInput.checked = settings.notifyEnabled;
+  soundSelect.value = settings.sound;
+  volumeRange.value = settings.volume;
+  volumeValue.textContent = volumeRange.value;
 }
 
 toggleApiKeyBtn.addEventListener("click", () => {
@@ -425,6 +507,11 @@ toggleApiKeyBtn.addEventListener("click", () => {
 });
 
 saveBtn.addEventListener("click", () => {
+  getAudioContext();
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+
   settings.apiKey = apiKeyInput.value.trim();
   settings.intervalMinutes = Number(intervalSelect.value);
   saveSettings();
@@ -432,7 +519,35 @@ saveBtn.addEventListener("click", () => {
   checkNow();
 });
 
+notifyEnabledInput.addEventListener("change", () => {
+  settings.notifyEnabled = notifyEnabledInput.checked;
+  saveSettings();
+});
+
+soundSelect.addEventListener("change", () => {
+  settings.sound = soundSelect.value;
+  saveSettings();
+});
+
+previewBtn.addEventListener("click", () => {
+  playChime();
+});
+
+volumeRange.addEventListener("input", () => {
+  volumeValue.textContent = volumeRange.value;
+  if (gainNode) {
+    gainNode.gain.value = Number(volumeRange.value) / 100;
+  }
+  settings.volume = volumeRange.value;
+  saveSettings();
+});
+
 addChannelBtn.addEventListener("click", () => {
+  getAudioContext();
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+
   const value = channelInput.value.trim();
   if (!value) return;
   if (settings.channels.some((c) => c.input === value)) {
@@ -465,7 +580,13 @@ channelList.addEventListener("click", (event) => {
   checkNow();
 });
 
-refreshBtn.addEventListener("click", checkNow);
+refreshBtn.addEventListener("click", () => {
+  getAudioContext();
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+  checkNow();
+});
 
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible" && settings.apiKey && settings.channels.length > 0) {
@@ -480,6 +601,7 @@ const cached = loadCache();
 if (cached) {
   renderStreams(cached.items);
   setStatus(`最終更新: ${new Date(cached.fetchedAt).toLocaleTimeString("ja-JP")}`);
+  previousSignature = signatureOf(cached.items);
 }
 
 if (settings.apiKey && settings.channels.length > 0) {
