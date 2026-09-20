@@ -90,6 +90,68 @@ body {
   color: var(--color-accent);
 }
 
+.channel-list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.channel-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 0.9rem;
+}
+
+.channel-row .channel-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.channel-row .channel-name.pending {
+  color: var(--color-muted);
+}
+
+.channel-row .channel-name.error {
+  color: var(--color-danger);
+}
+
+.channel-row .remove-btn {
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.channel-row .remove-btn:hover {
+  background: #fde8e8;
+  color: #c0392b;
+  border-color: #f3b8b8;
+}
+
+.channel-empty-hint {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  padding: 0.5rem 0;
+  margin: 0 0 1rem;
+}
+
 .controls {
   display: flex;
   flex-wrap: wrap;
@@ -203,6 +265,13 @@ body {
 
 .stream-card .badge.live {
   background: var(--color-live);
+}
+
+.stream-card .stream-channel {
+  margin: 0;
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .stream-card .stream-title {

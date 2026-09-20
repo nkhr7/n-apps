@@ -49,14 +49,9 @@
 
   <main class="app">
     <h1>YouTube配信予定</h1>
-    <p class="description">チャンネルのURLを登録すると、配信中・配信予定を定期的に確認して表示します</p>
+    <p class="description">チャンネルのURLを登録すると、配信中・配信予定を定期的に確認して表示します（複数チャンネル登録可）</p>
 
     <section class="setup-block">
-      <div class="field-row">
-        <label for="channelInput">チャンネルURL / ハンドル</label>
-        <input type="text" id="channelInput" placeholder="https://www.youtube.com/@handle" autocomplete="off">
-      </div>
-
       <div class="field-row">
         <label for="apiKeyInput">YouTube Data API キー</label>
         <div class="input-with-toggle">
@@ -80,8 +75,17 @@
         </select>
       </div>
 
+      <div class="field-row">
+        <label for="channelInput">チャンネルURL / ハンドルを追加</label>
+        <div class="input-with-toggle">
+          <input type="text" id="channelInput" placeholder="https://www.youtube.com/@handle" autocomplete="off">
+          <button type="button" id="addChannelBtn" class="btn btn-small">追加</button>
+        </div>
+      </div>
+      <ul class="channel-list" id="channelList"></ul>
+
       <div class="controls">
-        <button id="saveBtn" class="btn btn-primary" type="button">保存して確認</button>
+        <button id="saveBtn" class="btn btn-primary" type="button">APIキー・更新間隔を保存</button>
         <button id="refreshBtn" class="btn" type="button">今すぐ確認</button>
       </div>
     </section>
