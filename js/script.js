@@ -20,6 +20,11 @@ const apps = [
     description: "都道府県・年・月・日のselectタグをコピー",
     url: "apps/select-generator/",
   },
+  {
+    name: "YouTube配信予定",
+    description: "チャンネルの配信中・配信予定を定期的に確認",
+    url: "apps/youtube-schedule/",
+  },
 ];
 
 function renderApps() {

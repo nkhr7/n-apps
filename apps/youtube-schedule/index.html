@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="好きな間隔・音で鳴らせるインターバルタイマー">
+  <meta name="description" content="YouTubeチャンネルの配信中・配信予定を定期的に確認して表示">
 
   <!-- index.html を末尾に含むURLを、ディレクトリURLへ正規化する -->
   <script>
@@ -11,7 +11,7 @@
       location.replace(location.pathname.slice(0, -"index.html".length) + location.search + location.hash);
     }
   </script>
-  <link rel="canonical" href="https://n-apps.nkhr7.com/apps/interval-timer/">
+  <link rel="canonical" href="https://n-apps.nkhr7.com/apps/youtube-schedule/">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-V08S2K6KE4"></script>
@@ -22,7 +22,7 @@
     gtag('config', 'G-V08S2K6KE4');
   </script>
 
-  <title>インターバルタイマー | n-apps</title>
+  <title>YouTube配信予定 | n-apps</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="stylesheet" href="../../css/header.css">
   <link rel="stylesheet" href="style.css">
@@ -47,43 +47,49 @@
     </nav>
   </header>
 
-  <main class="timer-app">
-    <h1>インターバルタイマー</h1>
-    <p class="description">複数の間隔をループしながら音が鳴ります</p>
+  <main class="app">
+    <h1>YouTube配信予定</h1>
+    <p class="description">チャンネルのURLを登録すると、配信中・配信予定を定期的に確認して表示します</p>
 
-    <div class="time-display" id="timeDisplay">05:00</div>
-    <p class="current-interval" id="currentIntervalLabel">1 / 1 &middot; 5分</p>
-
-    <div class="controls">
-      <button id="toggleBtn" class="btn btn-primary">再生</button>
-      <button id="resetBtn" class="btn">リセット</button>
-      <button id="tabTitleToggleBtn" class="btn" type="button">タイマーをタブに表示</button>
-    </div>
-
-    <div class="settings">
-      <div class="setting-group">
-        <p class="setting-label">間隔（ループ）</p>
-        <ul class="interval-list" id="intervalList"></ul>
-        <button id="addIntervalBtn" class="btn btn-small" type="button">時間追加</button>
+    <section class="setup-block">
+      <div class="field-row">
+        <label for="channelInput">チャンネルURL / ハンドル</label>
+        <input type="text" id="channelInput" placeholder="https://www.youtube.com/@handle" autocomplete="off">
       </div>
 
-      <div class="setting-row">
-        <label for="soundSelect">音の種類</label>
-        <select id="soundSelect">
-          <option value="bell" selected>ベル</option>
-          <option value="chime">チャイム</option>
-          <option value="beep">ビープ</option>
-          <option value="alarm">アラーム</option>
+      <div class="field-row">
+        <label for="apiKeyInput">YouTube Data API キー</label>
+        <div class="input-with-toggle">
+          <input type="password" id="apiKeyInput" placeholder="AIza..." autocomplete="off">
+          <button type="button" id="toggleApiKeyBtn" class="btn btn-small">表示</button>
+        </div>
+      </div>
+
+      <p class="hint">
+        APIキーは<a href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank" rel="noopener">Google Cloud Console</a>で「YouTube Data API v3」を有効にすると発行できます。悪用防止のため、HTTPリファラーをこのサイトのドメインに制限することをおすすめします。入力した内容はこの端末のブラウザ内にのみ保存され、外部には送信されません。
+      </p>
+
+      <div class="field-row">
+        <label for="intervalSelect">自動更新の間隔</label>
+        <select id="intervalSelect">
+          <option value="5">5分</option>
+          <option value="10" selected>10分</option>
+          <option value="15">15分</option>
+          <option value="30">30分</option>
+          <option value="0">自動更新しない</option>
         </select>
-        <button id="previewBtn" class="btn btn-small" type="button">試聴</button>
       </div>
 
-      <div class="setting-row">
-        <label for="volumeRange">音量</label>
-        <input type="range" id="volumeRange" min="0" max="100" value="50">
-        <span id="volumeValue">50</span>
+      <div class="controls">
+        <button id="saveBtn" class="btn btn-primary" type="button">保存して確認</button>
+        <button id="refreshBtn" class="btn" type="button">今すぐ確認</button>
       </div>
-    </div>
+    </section>
+
+    <p class="status" id="statusText" hidden></p>
+    <p class="error-message" id="errorMessage" hidden></p>
+
+    <ul class="stream-list" id="streamList"></ul>
   </main>
 
   <footer class="site-footer">
