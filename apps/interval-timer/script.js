@@ -14,7 +14,7 @@ const MIN_MINUTES = 1;
 const MAX_MINUTES = 180;
 const DEFAULT_NEW_MINUTES = 5;
 const STORAGE_KEY = "interval-timer:settings";
-const STORAGE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 1週間
+const STORAGE_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 1か月
 
 const originalTitle = document.title;
 
@@ -61,6 +61,7 @@ function saveSettings() {
         intervals,
         sound: soundSelect.value,
         volume: volumeRange.value,
+        isTabTitleEnabled,
         savedAt: Date.now(),
       })
     );
@@ -82,6 +83,10 @@ function applySavedSettings() {
   if (typeof saved.volume !== "undefined") {
     volumeRange.value = saved.volume;
     volumeValue.textContent = volumeRange.value;
+  }
+  if (typeof saved.isTabTitleEnabled === "boolean") {
+    isTabTitleEnabled = saved.isTabTitleEnabled;
+    tabTitleToggleBtn.textContent = isTabTitleEnabled ? "タブのタイマーを非表示" : "タイマーをタブに表示";
   }
 }
 
@@ -313,6 +318,7 @@ tabTitleToggleBtn.addEventListener("click", () => {
   } else {
     document.title = originalTitle;
   }
+  saveSettings();
 });
 
 previewBtn.addEventListener("click", () => {
